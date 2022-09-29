@@ -27,7 +27,7 @@ if [file exists work] {
 vlib work
 
 # compile source files
-vlog silly.sv silly_tb.sv
+vlog rippleadder.sv rippleadder_tb.sv
 
 # start and run simulation
 vsim -voptargs=+acc work.tb
@@ -64,6 +64,4 @@ configure wave -rowmargin 4
 configure wave -childrowmargin 2
 
 -- Run the Simulation
-run 250 ns
-
-
+run 3020 ns
