@@ -876,55 +876,52 @@ module DES (input logic [63:0] key, input logic [63:0] plaintext,
 		    SubKey9, SubKey10, SubKey11, SubKey12,
 		    SubKey13, SubKey14, SubKey15, SubKey16);
 	// encrypt (encrypt=1) or decrypt (encrypt=0)
-    DES_Encrypt e1 (SubKey1, SubKey2, SubKey3, SubKey4,
-		   SubKey5, SubKey6, SubKey7, SubKey8,
-		   SubKey9, SubKey10, SubKey11, SubKey12,
-		   SubKey13, SubKey14, SubKey15, SubKey16,
-		   plaintext, ciphertext, encrypt);
-	DES_Decrypt d1 (SubKey1, SubKey2, SubKey3, SubKey4,
-		   SubKey5, SubKey6, SubKey7, SubKey8,
-		   SubKey9, SubKey10, SubKey11, SubKey12,
-		   SubKey13, SubKey14, SubKey15, SubKey16,
-		   plaintext, ciphertext, encrypt);
+    assign {sk1, sk2, sk3, sk4, sk5, sk6, sk7, sk8, 
+            sk9, sk10, sk11, sk12, sk13, sk14, sk15, sk16} = (encrypt == 1) ? 
+            {SubKey1, SubKey2, SubKey3, SubKey4,
+		     SubKey5, SubKey6, SubKey7, SubKey8,
+		     SubKey9, SubKey10, SubKey11, SubKey12,
+		     SubKey13, SubKey14, SubKey15, SubKey16} :
+            {SubKey16, SubKey15, SubKey14, SubKey13,
+             SubKey12, SubKey11, SubKey10, SubKey9, 
+             SubKey8, SubKey7, SubKey6, SubKey5,
+             SubKey4, SubKey3, SubKey2, SubKey1};
 
    // Initial Permutation (IP)
    IP b1 (plaintext, ip_out);
    // round 1
-   F1 f1 (ip_out, SubKey1, f1_out);
+   round r1 (ip_out, sk1, r1_out);
    // round 2
-   F2 f2 (f1_out, SubKey2, f2_out);
+   round r2 (r1_out, sk2, r2_out);
    // round 3
-   F3 f3 (f2_out, SubKey3, f3_out);
+   round r3 (r2_out, sk3, r3_out);
    // round 4
-   F4 f4 (f3_out, SubKey4, f4_out);
+   round r4 (r3_out, sk4, r4_out);
    // round 5
-   F5 f5 (f4_out, SubKey5, f5_out);  
+   round r5 (r4_out, sk5, r5_out);  
    // round 6
-   F6 f6 (f5_out, SubKey6, f6_out);   
+   round r6 (r5_out, sk6, r6_out);   
    // round 7
-   F7 f7 (f6_out, SubKey7, f7_out);  
+   round r7 (r6_out, sk7, r7_out);  
    // round 8
-   F8 f8 (f7_out, SubKey8, f8_out);  
+   round r8 (r7_out, sk8, r8_out);  
    // round 9
-   F9 f9 (f8_out, SubKey9, f9_out);  
+   round r9 (r8_out, sk9, r9_out);  
    // round 10
-   F10 f10 (f9_out, SubKey10, f10_out); 
+   round r10 (r9_out, sk10, r10_out); 
    // round 11
-   F11 f11 (f10_out, SubKey11, f11_out); 
+   round r11 (r10_out, sk11, r11_out); 
    // round 12
-   F12 f12 (f11_out, SubKey12, f12_out); 
+   round r12 (r11_out, sk12, r12_out); 
    // round 13
-   F13 f13 (f12_out, SubKey13, f13_out); 
+   round r13 (r12_out, sk13, r13_out); 
    // round 14
-   F14 f14 (f13_out, SubKey14, f14_out); 
+   round r14 (r13_out, sk14, r14_out); 
    // round 15
-   F15 f15 (f14_out, SubKey15, f15_out); 
+   round r15 (r14_out, sk15, r15_out); 
    // round 16
-   F16 f16 (f15_out, SubKey16, f16_out);
+   round r16 (r15_out, sk16, r16_out);
    // Final Permutation (IP^{-1}) (swap output of round16)
-   FP b2 (f16_out, ciphertext);
    FP FP({r16_out[31:0], r16_out[63:32]}, ciphertext);
    
 endmodule // DES
-
-
