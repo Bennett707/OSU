@@ -106,4 +106,3 @@ module rippleadder(input logic [3:0] A,
             fulladder four(A[3], B[3], CarryOut3, Sum[3], CarryOutTotal);
 
 endmodule
-
