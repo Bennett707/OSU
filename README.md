@@ -1,2 +1,2 @@
 # OSU
-this is a test
+These are a few of my files from my time at OSU
